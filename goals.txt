@@ -1,6 +1,0 @@
-i)  Derive possible explanation for why urban blacks are disproportionately affected by COVID by looking @ subway ridership
-ii) Examine paranoia
-	Look @ stations in predominately Asian neighborhoods (e.g., Flushing) and examine if there's a significant
-	drop in weekend ridership
-iii) More broadly, link station to neighborhood and regress %chng in visits on neighborhood characteristics and lagged values
-	- Neighborhood characteristics could be median salary, race, age, zoning (commerical, residential, etc.)

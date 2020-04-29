@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -25,10 +26,10 @@ Some stations have multiple linenames
         - By aggregating to daily we'd lose this granularity
 """
 
-mta_data = pd.read_csv('data\\mta_data_unmapped.csv')
+mta_data = pd.read_csv('.\\data\\mta_data.csv')
 mta_data.loc[:,'DATETIME'] = [pd.Timestamp(date, freq='d') for date in mta_data.DATETIME]
 
-mta_data = mta_data.drop_duplicates(subset=['C/A','UNIT','SCP','STATION','LINENAME','DIVISION','DATETIME'],keep='last',ignore_index=True)
+mta_data = mta_data.drop_duplicates(subset=['C/A','UNIT','SCP','STATION','LINENAME','DIVISION','DATETIME'],keep='last')
 
 # Collect station names
 station_names = np.unique(mta_data['STATION'])
@@ -144,28 +145,29 @@ for name in station_names_redux:
 
 
     fig, ax = plt.subplots(figsize=(14,8))
-    dir_name = 'output/plot_entries_per_station_grow={0}_smooth={1}'.format(int(growth),int(smooth))
+    dir_name = '.\\output\\plot_entries_per_station_grow={0}_smooth={1}'.format(int(growth),int(smooth))
     if smooth:
-        ax.plot(mta_sample.ENTRIES,alpha=0.3)
-        ax.plot(mta_sample_wkd_smooth.ENTRIES)
-        ax.plot(mta_sample_wkn_smooth.ENTRIES)
+        ax.plot(mta_sample.loc['2020-02':,'ENTRIES'],alpha=0.3)
+        ax.plot(mta_sample_wkd_smooth.loc['2020-02':,'ENTRIES'])
+        ax.plot(mta_sample_wkn_smooth.loc['2020-02':,'ENTRIES'])
         ax.legend(['Total, unsmoothed','Weekdays, smoothed','Weekends, smoothed'])
         ax.set_title(name)
         ax.set_xlabel('Date')
         ax.set_ylabel('Averge ridership by station entries' + growth_addendum)
         plt.tight_layout()
         try:
-            fig.savefig(dir_name + '/raw_entries_per_station={0}'.format(station_name_map[name]))
+            fig.savefig(dir_name + '\\raw_entries_per_station={0}'.format(station_name_map[name]))
         except FileNotFoundError:
             os.makedirs(dir_name)
-            fig.savefig(dir_name + '/raw_entries_per_station={0}'.format(station_name_map[name]))
+            fig.savefig(dir_name + '\\raw_entries_per_station={0}'.format(station_name_map[name]))
     else:
-        ax.plot(mta_sample.ENTRIES)
+        ax.plot(mta_sample.loc['2020-02':,'ENTRIES'])
         ax.set_title(name)
         ax.set_xlabel('Date')
         ax.set_ylabel('Averge ridership by station entries')
         plt.tight_layout()
         try:
-            fig.savefig(dir_name + '/raw_entries_per_station={0}'.format(station_name_map[name]))
+            fig.savefig(dir_name + '\\raw_entries_per_station={0}'.format(station_name_map[name]))
         except FileNotFoundError:
             os.makedirs(dir_name)
+            fig.savefig(dir_name + '\\raw_entries_per_station={0}'.format(station_name_map[name]))

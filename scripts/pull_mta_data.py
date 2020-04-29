@@ -34,10 +34,10 @@ else:
 
 mta_data = pd.DataFrame()
 # Grab names of files that have already been downloaded -- to save time
-downloaded = glob.glob('data\\*.csv')
+downloaded = glob.glob('.\\data\\*.csv')
 downloaded = [file[5:-4] for file in downloaded]
-if os.path.exists('data/mta_data.csv'):
-    mta_data = pd.read_csv('data/mta_data.csv')
+if os.path.exists('.\\data\\mta_data.csv'):
+    mta_data = pd.read_csv('.\\data\\mta_data.csv')
     mta_data.loc[:,'DATETIME'] = [pd.Timestamp(dtime) for dtime in mta_data.DATETIME]
 
 for i in range(start_date_idx,end_date_idx+1):
@@ -56,6 +56,9 @@ for i in range(start_date_idx,end_date_idx+1):
 
         # Filter by regular audits
         new_data = new_data.loc[new_data.DESC=='REGULAR']
-        new_data.to_csv('data\\{0}.csv'.format(file_names[i][:-4]))
+        new_data.to_csv('.\\data\\{0}.csv'.format(file_names[i][:-4]))
         mta_data = pd.concat([mta_data, new_data],axis=0)
         print('Added data for ' + pretty_date)
+
+# Save result to CSV
+mta_data.to_csv('.\\data\\mta_data.csv',index=False)
