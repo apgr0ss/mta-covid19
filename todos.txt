@@ -1,0 +1,4 @@
+- check to make sure %chng value is correct
+	- It's almost there -- but replace day-to-day weekend comparisons with weekend average for January
+- look into charts that produced odd results (can do other things concurrently, just omit these)
+- map stations to some kind of geographic entity (zip, neighborhood, census block, etc.) to tie to demographic info
