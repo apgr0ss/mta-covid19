@@ -118,12 +118,15 @@ for name in station_names_redux:
         mta_sample_merged = mta_sample_merged[['DATETIME','ENTRIES','ENTRIES_JAN']]
         mta_sample_merged = mta_sample_merged.set_index('DATETIME')
 
-        pct_chng = (mta_sample_merged.ENTRIES-mta_sample_merged.ENTRIES_JAN)/mta_sample_merged.ENTRIES_JAN
+        pct_chng = ((mta_sample_merged.ENTRIES-mta_sample_merged.ENTRIES_JAN)/mta_sample_merged.ENTRIES_JAN)*100
         mta_sample = pd.DataFrame(pct_chng)
         mta_sample.columns = ['ENTRIES']
-
+        mta_sample = mta_sample.sort_index()
         # Label to add to plot
-        growth_addendum = '\n(relative to Jan. averages)'
+        y_label = '% change in ridership\n(relative to Jan. averages)'
+    else:
+        y_label = 'Average ridership by station entries'
+
     if smooth:
         if growth:
             # Split weekends and weekdays
@@ -136,9 +139,9 @@ for name in station_names_redux:
             # Split weekends and weekdays
             mta_sample_wkd_smooth = mta_sample.loc[np.logical_and([date.weekday() >= 0 for date in mta_sample.DATETIME],
                                                                   [date.weekday() < 4 for date in mta_sample.DATETIME]),:]
-
             mta_sample_wkn_smooth = mta_sample.loc[np.logical_and([date.weekday() >= 4 for date in mta_sample.DATETIME],
                                                                   [date.weekday() <=6 for date in mta_sample.DATETIME]),:]
+
 
         mta_sample_wkd_smooth = mta_sample_wkd_smooth.rolling(window=7).mean().interpolate('linear')
         mta_sample_wkn_smooth = mta_sample_wkn_smooth.rolling(window=7).mean().interpolate('linear')
@@ -153,7 +156,7 @@ for name in station_names_redux:
         ax.legend(['Total, unsmoothed','Weekdays, smoothed','Weekends, smoothed'])
         ax.set_title(name)
         ax.set_xlabel('Date')
-        ax.set_ylabel('Averge ridership by station entries' + growth_addendum)
+        ax.set_ylabel(y_label)
         plt.tight_layout()
         try:
             fig.savefig(dir_name + '\\raw_entries_per_station={0}'.format(station_name_map[name]))
@@ -164,7 +167,7 @@ for name in station_names_redux:
         ax.plot(mta_sample.loc['2020-02':,'ENTRIES'])
         ax.set_title(name)
         ax.set_xlabel('Date')
-        ax.set_ylabel('Averge ridership by station entries')
+        ax.set_ylabel(y_label)
         plt.tight_layout()
         try:
             fig.savefig(dir_name + '\\raw_entries_per_station={0}'.format(station_name_map[name]))
