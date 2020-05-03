@@ -57,6 +57,8 @@ omit_stations = ['TIMES SQ-42 ST','ST LAWRENCE AV', 'PROSPECT AV',
 
 # Omit stations with inconsistencies -- will look at these later
 station_names_redux = np.array(station_names)[[station not in omit_stations for station in station_names]]
+with open(".\\data\\station_names_redux.txt",'w') as f:
+    f.write('\n'.join([station_name_map[name] for name in station_names_redux]))
 
 # Smooth series with rolling window
 # over 1-week period
